@@ -1,0 +1,48 @@
+$def with (autos, buscar)
+
+<div class="toolbar">
+    <form method="get" action="/" class="buscar">
+        <input type="text" name="buscar" placeholder="Buscar por marca, modelo o color..." value="$buscar">
+        <button type="submit">Buscar</button>
+        $if buscar:
+            <a href="/" class="limpiar">Limpiar</a>
+    </form>
+    <a href="/agregar" class="btn-agregar">+ Agregar auto</a>
+</div>
+
+$if not autos:
+    <p class="vacio">No se encontraron autos.</p>
+$else:
+    <table>
+        <thead>
+            <tr>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Tracción</th>
+                <th>Color</th>
+                <th>Año</th>
+                <th>Núm. serie</th>
+                <th>Tipo de motor</th>
+                <th>Combustible</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            $for auto in autos:
+                <tr>
+                    <td>$auto.marca</td>
+                    <td>$auto.modelo</td>
+                    <td>$auto.traccion</td>
+                    <td>$auto.color</td>
+                    <td>$auto.anio</td>
+                    <td>$auto.num_serie</td>
+                    <td>$auto.tipo_motor</td>
+                    <td>$auto.tipo_combustible</td>
+                    <td>
+                        <form method="post" action="/eliminar/$auto.num_serie" onsubmit="return confirm('¿Eliminar este auto?');">
+                            <button type="submit" class="btn-eliminar">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+    </table>
+    <p class="total">Total: $len(autos) auto(s)</p>

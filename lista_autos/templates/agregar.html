@@ -1,0 +1,46 @@
+$def with (error)
+
+<a href="/" class="volver">&larr; Volver al inventario</a>
+
+<h2>Agregar auto</h2>
+
+$if error:
+    <p class="error">$error</p>
+
+<form method="post" action="/agregar" class="form-auto">
+    <label>Marca *
+        <input type="text" name="marca" required>
+    </label>
+    <label>Modelo *
+        <input type="text" name="modelo" required>
+    </label>
+    <label>Tracción
+        <select name="traccion">
+            <option value="Delantera">Delantera</option>
+            <option value="Trasera">Trasera</option>
+            <option value="4x4">4x4</option>
+        </select>
+    </label>
+    <label>Color
+        <input type="text" name="color">
+    </label>
+    <label>Año de creación
+        <input type="number" name="anio" min="1900" max="2100">
+    </label>
+    <label>Número de serie *
+        <input type="text" name="num_serie" required>
+    </label>
+    <label>Tipo de motor
+        <input type="text" name="tipo_motor">
+    </label>
+    <label>Tipo de combustible
+        <select name="tipo_combustible">
+            <option value="Gasolina">Gasolina</option>
+            <option value="Diésel">Diésel</option>
+            <option value="Híbrido">Híbrido</option>
+            <option value="Eléctrico">Eléctrico</option>
+        </select>
+    </label>
+
+    <button type="submit">Guardar auto</button>
+</form>

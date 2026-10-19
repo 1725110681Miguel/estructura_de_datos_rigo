@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navegador con Pila</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="contenedor">
+        <h1>Navegador con Pila</h1>
+
+        <form method="post">
+            <input type="text" name="url" placeholder="Escribe una página, ej. google.com" {% if salio %}disabled{% endif %}>
+
+            <div class="menu">
+                <button name="accion" value="visitar" {% if salio %}disabled{% endif %}>1. Visitar una página web</button>
+                <button name="accion" value="regresar" {% if salio %}disabled{% endif %}>2. Regresar a la página anterior</button>
+                <button name="accion" value="actual" {% if salio %}disabled{% endif %}>3. Mostrar la página actual</button>
+                <button name="accion" value="historial" {% if salio %}disabled{% endif %}>4. Mostrar historial (descendente)</button>
+                <button name="accion" value="vacio" {% if salio %}disabled{% endif %}>5. Verificar o eliminar historial</button>
+                <button name="accion" value="salir" class="salir" {% if salio %}disabled{% endif %}>6. Salir del programa</button>
+            </div>
+
+            {% if confirmar %}
+            <button name="accion" value="eliminar" class="eliminar">Sí, eliminar historial</button>
+            {% endif %}
+        </form>
+
+        <div id="salida">{{ mensaje }}</div>
+
+        {% if salio %}
+        <a class="reiniciar" href="/reiniciar">Iniciar de nuevo</a>
+        {% endif %}
+    </main>
+</body>
+</html>

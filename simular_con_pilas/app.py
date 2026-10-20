@@ -1,6 +1,4 @@
-from flask import Flask, render_template, request, redirect
-
-app = Flask(__name__)
+import web
 
 
 class Pila:
@@ -26,15 +24,24 @@ class Pila:
         self.items = []
 
 
+urls = (
+    "/", "Inicio",
+    "/reiniciar", "Reiniciar"
+)
+
+render = web.template.render("templates/")
 pila = Pila()
 estado = {"mensaje": "Bienvenido. Elige una opción del menú.", "confirmar": False, "salio": False}
 
 
-@app.route("/", methods=["GET", "POST"])
-def inicio():
-    if request.method == "POST":
-        accion = request.form.get("accion")
-        pagina = request.form.get("url", "").strip()
+class Inicio:
+    def GET(self):
+        return render.index(estado["mensaje"], estado["confirmar"], estado["salio"])
+
+    def POST(self):
+        datos = web.input(accion="", url="")
+        accion = datos.accion
+        pagina = datos.url.strip()
         estado["confirmar"] = False
 
         if accion == "visitar":
@@ -83,19 +90,18 @@ def inicio():
             estado["mensaje"] = "Programa finalizado."
             estado["salio"] = True
 
-        return redirect("/")
-
-    return render_template("index.html", mensaje=estado["mensaje"], confirmar=estado["confirmar"], salio=estado["salio"])
+        raise web.seeother("/")
 
 
-@app.route("/reiniciar")
-def reiniciar():
-    pila.vaciar()
-    estado["mensaje"] = "Bienvenido. Elige una opción del menú."
-    estado["confirmar"] = False
-    estado["salio"] = False
-    return redirect("/")
+class Reiniciar:
+    def GET(self):
+        pila.vaciar()
+        estado["mensaje"] = "Bienvenido. Elige una opción del menú."
+        estado["confirmar"] = False
+        estado["salio"] = False
+        raise web.seeother("/")
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app = web.application(urls, globals())
+    app.run()

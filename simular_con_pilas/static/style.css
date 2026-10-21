@@ -73,7 +73,7 @@ button:disabled {
 
 .eliminar {
     width: 100%;
-    margin-top: 8px;
+    margin-top: 12px;
     background: #e08a1e;
 }
 
@@ -88,13 +88,40 @@ button:disabled {
     border-left: 4px solid #2f6fed;
     border-radius: 6px;
     min-height: 70px;
-    white-space: pre-line;
     color: #222222;
 }
 
-.reiniciar {
-    display: block;
-    margin-top: 15px;
-    text-align: center;
-    color: #2f6fed;
+.lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #ffffff;
+    border: 1px solid #c5cfdd;
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+.chip.actual {
+    background: #dce8ff;
+    border-color: #2f6fed;
+    font-weight: bold;
+}
+
+.x {
+    padding: 2px 8px;
+    border-radius: 50%;
+    background: #d64545;
+    font-size: 13px;
+}
+
+.x:hover {
+    background: #b03030;
 }

@@ -1,0 +1,176 @@
+$def with (normales, prioritarios, mensaje)
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cafetería UTEC - Versión sencilla</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <h1>Cafetería UTEC</h1>
+    <p class="subtitulo">Versión sencilla · Administración de pedidos</p>
+
+    <nav>
+        <a href="/">Inicio</a>
+        <a href="#registro">Registrar</a>
+        <a href="#pendientes">Ver pendientes</a>
+        <a href="#cancelar">Cancelar</a>
+    </nav>
+
+    $if mensaje:
+        <p class="mensaje" role="status">$mensaje</p>
+
+    <section id="registro">
+        <h2>1. Registrar pedido</h2>
+
+        <form action="/registrar" method="post">
+            <label for="cliente">Nombre del cliente:</label>
+            <input
+                id="cliente"
+                name="cliente"
+                type="text"
+                required
+            >
+
+            <label for="producto">Producto:</label>
+            <input
+                id="producto"
+                name="producto"
+                type="text"
+                required
+            >
+
+            <label for="cantidad">Cantidad:</label>
+            <input
+                id="cantidad"
+                name="cantidad"
+                type="number"
+                min="1"
+                required
+            >
+
+            <label for="tipo">Tipo de pedido:</label>
+            <select id="tipo" name="tipo">
+                <option value="Normal">Normal</option>
+                <option value="Prioritario">Prioritario</option>
+            </select>
+
+            <label for="tiempo">
+                Tiempo total del pedido en minutos:
+            </label>
+            <input
+                id="tiempo"
+                name="tiempo"
+                type="number"
+                min="1"
+                required
+            >
+
+            <button type="submit">Registrar pedido</button>
+        </form>
+    </section>
+
+    <section>
+        <h2>2. Preparar siguiente pedido</h2>
+
+        <p>
+            Se atiende primero la fila prioritaria.
+            Dentro de cada fila se respeta el orden de llegada.
+        </p>
+
+        <form action="/preparar" method="post">
+            <button type="submit">Preparar siguiente</button>
+        </form>
+    </section>
+
+    <section>
+        <h2>3. Consultar siguiente pedido</h2>
+
+        <p>Consulta el siguiente pedido sin retirarlo de la fila.</p>
+
+        <a href="/siguiente">Consultar siguiente</a>
+    </section>
+
+    <section id="pendientes">
+        <h2>4. Pedidos pendientes</h2>
+
+        <h3>Fila prioritaria</h3>
+
+        $if prioritarios:
+            <ul>
+                $for pedido in prioritarios:
+                    <li>
+                        <strong>Pedido $pedido["numero"]</strong>
+                        <br>
+                        Cliente: $pedido["cliente"]
+                        <br>
+                        Producto: $pedido["producto"]
+                        <br>
+                        Cantidad: $pedido["cantidad"]
+                        <br>
+                        Tipo: $pedido["tipo"]
+                        <br>
+                        Tiempo: $pedido["tiempo"] minutos
+                    </li>
+            </ul>
+        $else:
+            <p>No hay pedidos prioritarios.</p>
+
+        <h3>Fila normal</h3>
+
+        $if normales:
+            <ul>
+                $for pedido in normales:
+                    <li>
+                        <strong>Pedido $pedido["numero"]</strong>
+                        <br>
+                        Cliente: $pedido["cliente"]
+                        <br>
+                        Producto: $pedido["producto"]
+                        <br>
+                        Cantidad: $pedido["cantidad"]
+                        <br>
+                        Tipo: $pedido["tipo"]
+                        <br>
+                        Tiempo: $pedido["tiempo"] minutos
+                    </li>
+            </ul>
+        $else:
+            <p>No hay pedidos normales.</p>
+    </section>
+
+    <section>
+        <h2>5. Consultar estadísticas</h2>
+
+        <a href="/estadisticas">Ver estadísticas</a>
+    </section>
+
+    <section id="cancelar">
+        <h2>6. Cancelar pedido</h2>
+
+        <form action="/cancelar" method="post">
+            <label for="numero">Número del pedido:</label>
+
+            <input
+                id="numero"
+                name="numero"
+                type="number"
+                min="1"
+                required
+            >
+
+            <button type="submit">Cancelar pedido</button>
+        </form>
+    </section>
+
+    <p class="subtitulo">
+        Los pedidos se guardan mientras el programa está encendido.
+    </p>
+
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ventanilla de servicios escolares</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='estilos.css') }}">
+</head>
+<body>
+    <main>
+        <header>
+            <h1>Ventanilla de servicios escolares</h1>
+            <p>Atención a estudiantes por orden de llegada.</p>
+        </header>
+
+        {% for mensaje in mensajes %}
+            <p class="aviso" role="status">{{ mensaje }}</p>
+        {% endfor %}
+
+        <section>
+            <h2>Registrar estudiante</h2>
+
+            <form action="{{ url_for('agregar') }}" method="post">
+                <div class="campos">
+                    <label>
+                        Matrícula
+                        <input type="text" name="matricula"
+                               placeholder="Ej. 172511...." required>
+                    </label>
+
+                    <label>
+                        Nombre completo
+                        <input type="text" name="nombre"
+                               placeholder="Ej. Ari Muñoz" required>
+                    </label>
+
+                    <label>
+                        Carrera
+                        <input type="text" name="carrera"
+                               placeholder="Ej. Ingeniería en TIC" required>
+                    </label>
+
+                    <label>
+                        Tipo de trámite
+                        <input type="text" name="tramite"
+                               placeholder="Ej. Constancia de estudios" required>
+                    </label>
+                </div>
+
+                <button type="submit">Agregar a la fila</button>
+            </form>
+        </section>
+
+        <section>
+            <h2>Fila de atención</h2>
+            <p>Estudiantes en espera: <strong>{{ estudiantes|length }}</strong></p>
+
+            {% if estudiantes %}
+                {% set siguiente = estudiantes[0] %}
+                <div class="siguiente">
+                    <p>
+                        Siguiente en pasar: <strong>{{ siguiente.nombre }}</strong><br>
+                        Matrícula: {{ siguiente.matricula }} · Trámite: {{ siguiente.tramite }}
+                    </p>
+                    <form action="{{ url_for('atender') }}" method="post">
+                        <button type="submit">Atender al primero</button>
+                    </form>
+                </div>
+
+                <div class="tabla">
+                    <table>
+                        <caption>Estudiantes en orden de llegada</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Lugar</th>
+                                <th scope="col">Matrícula</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Carrera</th>
+                                <th scope="col">Trámite</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for estudiante in estudiantes %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ estudiante.matricula }}</td>
+                                    <td>{{ estudiante.nombre }}</td>
+                                    <td>{{ estudiante.carrera }}</td>
+                                    <td>{{ estudiante.tramite }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="vacia">La fila está vacía. Registra al primer estudiante.</p>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>

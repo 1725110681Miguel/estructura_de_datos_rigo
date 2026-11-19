@@ -1,0 +1,124 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #eef3f7;
+    color: #203040;
+    font-family: Arial, sans-serif;
+    line-height: 1.5;
+}
+
+main {
+    max-width: 920px;
+    margin: 32px auto;
+    padding: 0 16px;
+}
+
+header, section, .aviso {
+    margin-bottom: 16px;
+    padding: 22px;
+    border-radius: 10px;
+}
+
+header {
+    background: #183955;
+    color: white;
+}
+
+section {
+    background: white;
+    border: 1px solid #d5dfe7;
+}
+
+h1, h2 {
+    margin: 0 0 12px;
+    line-height: 1.2;
+}
+
+h2 {
+    font-size: 1.3rem;
+}
+
+header p, section p:last-child {
+    margin-bottom: 0;
+}
+
+.campos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+label {
+    display: grid;
+    gap: 5px;
+    font-weight: bold;
+}
+
+input, select, button {
+    padding: 10px;
+    border-radius: 6px;
+    font: inherit;
+}
+
+input, select {
+    width: 100%;
+    border: 1px solid #8295a5;
+    background: white;
+}
+
+button {
+    border: 0;
+    background: #165d83;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #104568;
+}
+
+.aviso {
+    background: #daeaf5;
+}
+
+.tabla {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 9px;
+    text-align: left;
+    border-bottom: 1px solid #d5dfe7;
+}
+
+th {
+    background: #edf3f7;
+}
+
+dl {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px 16px;
+    margin-bottom: 0;
+}
+
+dd {
+    margin: 0;
+    font-weight: bold;
+}
+
+@media (max-width: 600px) {
+    .campos {
+        grid-template-columns: 1fr;
+    }
+}

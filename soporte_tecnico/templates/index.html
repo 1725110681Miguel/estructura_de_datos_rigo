@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Soporte técnico</title>
+    <link rel="stylesheet" href="/static/estilos.css">
+</head>
+<body>
+    <main>
+        <header>
+            <h1>Mesa de soporte técnico</h1>
+            <p>Registro y atención de tickets de clientes</p>
+        </header>
+
+        {% if aviso %}
+            <p class="aviso" role="status">{{ aviso }}</p>
+        {% endif %}
+
+        <section>
+            <h2>Registrar ticket</h2>
+            <form action="/registrar" method="post">
+                <div class="campos">
+                    <label>
+                        Nombre del cliente
+                        <input type="text" name="cliente" required>
+                    </label>
+
+                    <label>
+                        Prioridad
+                        <select name="prioridad" required>
+                            <option value="Normal">Normal</option>
+                            <option value="Prioritaria">Prioritaria</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        Tipo de problema
+                        <input type="text" name="problema"
+                               placeholder="Ej. La impresora no responde" required>
+                    </label>
+
+                    <label>
+                        Tiempo estimado en minutos
+                        <input type="number" name="tiempo" min="1" step="1"
+                               placeholder="Ej. 15" required>
+                    </label>
+                </div>
+                <button type="submit">Registrar ticket</button>
+            </form>
+        </section>
+
+        <section>
+            <h2>Siguiente ticket</h2>
+            {% if siguiente %}
+                <p>
+                    <strong>{{ siguiente.numero }} · {{ siguiente.cliente }}</strong><br>
+                    {{ siguiente.problema }}<br>
+                    Prioridad: {{ siguiente.prioridad }} ·
+                    Tiempo estimado: {{ siguiente.tiempo }} min
+                </p>
+                <form action="/atender" method="post">
+                    <button type="submit">Atender el siguiente ticket</button>
+                </form>
+            {% else %}
+                <p>Las dos filas están vacías.</p>
+            {% endif %}
+        </section>
+
+        {% for titulo, tickets in [
+            ("Fila prioritaria", prioritarios),
+            ("Fila normal", normales)
+        ] %}
+            <section>
+                <h2>{{ titulo }} ({{ tickets|length }})</h2>
+                {% if tickets %}
+                    <div class="tabla">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Lugar</th>
+                                    <th>Ticket</th>
+                                    <th>Cliente</th>
+                                    <th>Problema</th>
+                                    <th>Prioridad</th>
+                                    <th>Tiempo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for ticket in tickets %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ ticket.numero }}</td>
+                                        <td>{{ ticket.cliente }}</td>
+                                        <td>{{ ticket.problema }}</td>
+                                        <td>{{ ticket.prioridad }}</td>
+                                        <td>{{ ticket.tiempo }} min</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p>Esta fila está vacía.</p>
+                {% endif %}
+            </section>
+        {% endfor %}
+
+        <section>
+            <h2>Estadísticas</h2>
+            <dl>
+                <dt>Tickets pendientes</dt>
+                <dd>{{ cantidad_pendiente }}</dd>
+
+                <dt>Tickets atendidos</dt>
+                <dd>{{ atendidos }}</dd>
+
+                <dt>Tiempo estimado para resolver todos los pendientes</dt>
+                <dd>{{ minutos_pendientes }} min</dd>
+            </dl>
+        </section>
+    </main>
+</body>
+</html>

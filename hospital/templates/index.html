@@ -1,0 +1,107 @@
+$def with (general, prioritaria, actual, atendidos, total, prioritarios, promedio)
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turnos del hospital</title>
+    <link rel="stylesheet" href="/static/estilos.css">
+</head>
+<body>
+<main>
+    <h1>Turnos del hospital</h1>
+    <p>Consulta médica · Un médico · Atención por orden de llegada en cada fila</p>
+    
+    <section>
+        <h2>Registrar paciente</h2>
+        <form action="/registrar" method="post" class="registro">
+            <label>Nombre
+                <input name="nombre" maxlength="100" required>
+            </label>
+            <label>Edad
+                <input type="number" name="edad" min="0" max="120" required>
+            </label>
+            <label>Motivo de consulta
+                <input name="motivo" maxlength="300" required>
+            </label>
+            <label>Clasificación / tipo de atención
+                <select name="tipo" required>
+                    <option value="General">General — sin prioridad</option>
+                    <option value="Prioritaria">Prioritaria — requiere prioridad</option>
+                </select>
+            </label>
+            <label>Tiempo estimado (minutos)
+                <input type="number" name="tiempo" min="1" max="240" required>
+            </label>
+            <button type="submit">Registrar y asignar turno</button>
+        </form>
+        <p>El turno asignado aparece en la fila correspondiente.</p>
+    </section>
+
+    <section>
+        <h2>Consulta actual</h2>
+        $if actual is not None:
+            <h3>Turno $actual['turno'] · $actual['nombre']</h3>
+            <p>Edad: $actual['edad'] · Atención: $actual['tipo']</p>
+            <p>Motivo: $actual['motivo']</p>
+            <p>Tiempo estimado: $actual['tiempo'] minutos</p>
+            <form action="/finalizar" method="post">
+                <button type="submit">Finalizar consulta</button>
+            </form>
+        $else:
+            <p>Médico disponible.</p>
+            $if general or prioritaria:
+                <form action="/atender" method="post">
+                    <button type="submit">Atender siguiente paciente</button>
+                </form>
+            $else:
+                <p>No hay pacientes en espera.</p>
+    </section>
+
+    $for titulo, fila in [("Fila prioritaria", prioritaria), ("Fila general", general)]:
+        <section>
+            <h2>$titulo ($len(fila))</h2>
+            $if fila:
+                <div class="tabla">
+                    <table>
+                        <thead><tr><th>Turno</th><th>Nombre</th><th>Edad</th><th>Motivo</th><th>Tipo</th><th>Estimado</th></tr></thead>
+                        <tbody>
+                        $for p in fila:
+                            <tr>
+                                <td>$p['turno']</td><td>$p['nombre']</td><td>$p['edad']</td>
+                                <td>$p['motivo']</td><td>$p['tipo']</td><td>$p['tiempo'] min</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            $else:
+                <p>Fila vacía.</p>
+        </section>
+
+    <section>
+        <h2>Estadísticas</h2>
+        <ul>
+            <li>Pacientes registrados: $total</li>
+            <li>En espera: $(len(general) + len(prioritaria))</li>
+            <li>En consulta: $(1 if actual is not None else 0)</li>
+            <li>Consultas finalizadas: $len(atendidos)</li>
+            <li>Atendidos prioritarios: $prioritarios</li>
+            <li>Atendidos generales: $(len(atendidos) - prioritarios)</li>
+            <li>Duración real promedio: $promedio minutos</li>
+        </ul>
+        <p>La duración real se mide desde «Atender» hasta «Finalizar».</p>
+    </section>
+
+    <section>
+        <h2>Historial de consultas finalizadas</h2>
+        $if atendidos:
+            <ol>
+            $for p in atendidos:
+                <li>Turno $p['turno'] · $p['nombre'] · $p['tipo'] · $(round(p['duracion'], 2)) min</li>
+            </ol>
+        $else:
+            <p>Todavía no hay consultas finalizadas.</p>
+    </section>
+</main>
+</body>
+</html>
